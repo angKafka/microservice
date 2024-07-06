@@ -1,0 +1,29 @@
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    timeout: 60000 # timeout in milliseconds
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+    username: rdutta
+    password: Prerna12345
+    driver-class-name: oracle.jdbc.OracleDriver
+    testWhileIdle: 'true'
+    validationQuery: SELECT 1
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8001
