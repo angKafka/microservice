@@ -1,42 +1,23 @@
-package org.rdutta.student.entity;
+package org.rdutta.hostel.clone;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
-@Entity
-@Table(name = "STUDENT")
-@DynamicInsert
-@DynamicUpdate
-public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "STUDENT_ID")
+public class StudentDTO {
     private UUID studentId;
-    @Column(name = "FIRSTNAME")
     private String firstName;
-    @Column(name = "LASTNAME")
     private String lastName;
-    @Column(name = "EMAIL")
     private String email;
-    @Column(name = "ADMISSION_AT")
-    @CreatedDate
-    private Date admissionDate;
-    @Column(name = "IS_ACTIVE")
+    private Date admissionAt;
     private boolean isActive;
 
-    public Student() {}
+    public StudentDTO() {}
 
-    public Student(String firstName, String lastName, String email, Date admissionDate, boolean isActive) {
+    public StudentDTO(String firstName, String lastName, String email, Date admissionAt, boolean isActive) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.admissionDate = admissionDate;
+        this.admissionAt = admissionAt;
         this.isActive = isActive;
     }
 
@@ -72,12 +53,12 @@ public class Student {
         this.email = email;
     }
 
-    public Date getAdmissionDate() {
-        return admissionDate;
+    public Date getAdmissionAt() {
+        return admissionAt;
     }
 
-    public void setAdmissionDate(Date admissionDate) {
-        this.admissionDate = admissionDate;
+    public void setAdmissionAt(Date admissionAt) {
+        this.admissionAt = admissionAt;
     }
 
     public boolean isActive() {
