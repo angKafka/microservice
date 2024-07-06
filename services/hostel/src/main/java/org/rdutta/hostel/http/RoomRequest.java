@@ -3,6 +3,8 @@ package org.rdutta.hostel.http;
 public record RoomRequest(
         int roomNumber,
         int floor,
-        String isEmpty
+        String isEmpty,
+        int leftBed,
+        int rightBed
 ) {
 }
