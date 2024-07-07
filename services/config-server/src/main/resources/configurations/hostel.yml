@@ -11,7 +11,7 @@ spring:
         min-idle: 0
         max-wait: -1ms
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:ORCLCDB
+    url: jdbc:oracle:thin:@localhost:1521:orcl
     username: rdutta
     password: Prerna12345
     driver-class-name: oracle.jdbc.OracleDriver

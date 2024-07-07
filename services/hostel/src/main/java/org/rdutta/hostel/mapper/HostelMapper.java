@@ -24,13 +24,13 @@ public class HostelMapper {
     }
 
     private Room convertToRoom(RoomRequest roomRequest) {
-        return new Room(roomRequest.roomNumber(), roomRequest.floor(), roomRequest.isEmpty(), roomRequest.leftBed(), roomRequest.rightBed());
+        return new Room(roomRequest.roomNumber(), roomRequest.floor(), roomRequest.isEmpty());
     }
 
     public List<RoomDTO> convertRoomsToDTOs(List<Room> rooms) {
         List<RoomDTO> roomDTOs = new ArrayList<>();
         for (Room room : rooms) {
-            RoomDTO roomDTO = new RoomDTO(room.getRoomId(), room.getRoomNumber(), room.getFloor(), room.getIsEmpty(), room.getLeftBed(), room.getRightBed()); // Assuming these are room properties
+            RoomDTO roomDTO = new RoomDTO(room.getRoomId(), room.getRoomNumber(), room.getFloor(), room.getIsEmpty()); // Assuming these are room properties
             roomDTOs.add(roomDTO);
         }
         return roomDTOs;
@@ -38,7 +38,7 @@ public class HostelMapper {
 
     public HostelDTO convertToDTO(Hostel hostel) {
         List<RoomDTO> roomDTOs = hostel.getRooms().stream()
-                .map(room -> new RoomDTO(room.getRoomId(), room.getRoomNumber(), room.getFloor(), room.getIsEmpty(), room.getLeftBed(), room.getRightBed()))
+                .map(room -> new RoomDTO(room.getRoomId(), room.getRoomNumber(), room.getFloor(), room.getIsEmpty()))
                 .collect(Collectors.toList());
         return new HostelDTO(hostel.getHostelId(), hostel.getHostelName(), roomDTOs);
     }

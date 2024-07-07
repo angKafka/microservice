@@ -10,8 +10,6 @@ public class RoomDTO {
     private int room_number;
     private int floor;
     private String isEmpty;
-    private int leftBed;
-    private int rightBed;
 
     public RoomDTO() {}
 
@@ -20,15 +18,11 @@ public class RoomDTO {
             @JsonProperty("room_id")UUID room_id,
             @JsonProperty("room_number")int room_number,
             @JsonProperty("floor") int floor,
-            @JsonProperty("isEmpty") String isEmpty,
-            @JsonProperty("leftBed") int leftBed,
-            @JsonProperty("rightBed") int rightBed) {
+            @JsonProperty("isEmpty") String isEmpty) {
         this.room_id = room_id;
         this.room_number = room_number;
         this.floor = floor;
         this.isEmpty = isEmpty;
-        this.leftBed = leftBed;
-        this.rightBed = rightBed;
     }
 
     public UUID getRoom_id() {
@@ -61,21 +55,5 @@ public class RoomDTO {
 
     public void setIsEmpty(String isEmpty) {
         this.isEmpty = isEmpty;
-    }
-
-    public int getLeftBed() {
-        return leftBed;
-    }
-
-    public void setLeftBed(int leftBed) {
-        this.leftBed = leftBed;
-    }
-
-    public int getRightBed() {
-        return rightBed;
-    }
-
-    public void setRightBed(int rightBed) {
-        this.rightBed = rightBed;
     }
 }

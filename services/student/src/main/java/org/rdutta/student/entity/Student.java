@@ -1,8 +1,6 @@
 package org.rdutta.student.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
@@ -11,8 +9,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "STUDENT")
-@DynamicInsert
-@DynamicUpdate
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

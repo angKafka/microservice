@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "ROOM")
@@ -26,11 +26,6 @@ public class Room {
     @Column(name = "IS_EMPTY")
     private String isEmpty;
 
-    @Column(name = "LEFT_BED")
-    private int leftBed;
-    @Column(name = "RIGHT_BED")
-    private int rightBed;
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "HOSTEL_ID")
@@ -38,12 +33,10 @@ public class Room {
 
     public Room() {}
 
-    public Room(int roomNumber, int floor, String isEmpty, int leftBed, int rightBed) {
+    public Room(int roomNumber, int floor, String isEmpty) {
         this.roomNumber = roomNumber;
         this.floor = floor;
         this.isEmpty = isEmpty;
-        this.leftBed = leftBed;
-        this.rightBed = rightBed;
     }
 
     public UUID getRoomId() {
@@ -84,30 +77,5 @@ public class Room {
 
     public void setHostel(Hostel hostel) {
         this.hostel = hostel;
-    }
-
-    public int getLeftBed() {
-        return leftBed;
-    }
-    public void setLeftBed(int leftBed) {
-        this.leftBed = leftBed;
-    }
-    public int getRightBed() {
-        return rightBed;
-    }
-    public void setRightBed(int rightBed) {
-        this.rightBed = rightBed;
-    }
-
-    public void statusChange() {
-        if(getLeftBed() == 1 && getRightBed() == 1) {
-            setIsEmpty("FULL");
-        }else if(getLeftBed() == 1 && getRightBed() == 0) {
-            setIsEmpty("HALF-FULL");
-        }else if(getLeftBed() == 0 && getRightBed() == 1) {
-            setIsEmpty("HALF-FULL");
-        }else{
-            setIsEmpty("ZERO-MEMBER");
-        }
     }
 }

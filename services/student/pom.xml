@@ -49,9 +49,12 @@
 			<artifactId>jedis</artifactId>
 			<version>5.2.0-beta4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-database-oracle -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-database-postgresql</artifactId>
+			<artifactId>flyway-database-oracle</artifactId>
+			<version>10.15.2</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
