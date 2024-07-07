@@ -1,5 +1,4 @@
 package org.rdutta.student.controller;
-import org.rdutta.student.dto.StudentDTO;
 import org.rdutta.student.dto.StudentRequest;
 import org.rdutta.student.dto.StudentResponse;
 import org.rdutta.student.entity.Student;

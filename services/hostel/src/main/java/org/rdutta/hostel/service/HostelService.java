@@ -50,6 +50,7 @@ public class HostelService implements I_HostelService {
         // Set the hostel reference in each room
         for (Room room : hostel.getRooms()) {
             room.setHostel(hostel);
+            room.statusChange();
         }
 
         // Save the hostel entity
@@ -60,7 +61,7 @@ public class HostelService implements I_HostelService {
 
     @Caching(
             evict = {@CacheEvict(value = "hostel", allEntries = true),
-            @CacheEvict(value = "hostel", key = "#hostelId")}
+                    @CacheEvict(value = "hostel", key = "#hostelId")}
     )
     @Transactional
     @Override
@@ -75,24 +76,33 @@ public class HostelService implements I_HostelService {
     @Transactional
     @Override
     public String updateHostel(UUID hostelId, HostelRequest hostelRequest) {
-        if(hostelRepository.existsById(hostelId)){
-            Hostel hostel = hostelMapper.convertToHostel(hostelRequest);
-            hostel.setHostelName(hostelRequest.hostelName());
-            hostelRepository.save(hostel);
-            log.info("Hostel {} updated", hostelId);
+        try{
+            if(hostelRepository.existsById(hostelId)){
+                Hostel hostel = hostelMapper.convertToHostel(hostelRequest);
+                hostel.setHostelName(hostelRequest.hostelName());
+                hostelRepository.save(hostel);
+                log.info("Hostel {} updated", hostelId);
+            }
+        }catch (ResourceNotFoundException e){
+            log.error(e.getMessage());
         }
-        return "Hostel not found";
+        return "Hostel successfully updated";
     }
 
+    @Transactional
     @Override
     public String updateRoom(UUID roomId, RoomRequest roomRequest) {
-        if(roomRepository.existsById(roomId)){
-            Room existingRoom = roomRepository.findById(roomId).get();
-            existingRoom.setIsEmpty("FULLMEMBER");
-            roomRepository.save(existingRoom);
-            log.info("Room {} updated", roomId);
+        try{
+            if(roomRepository.existsById(roomId)){
+                Room existingRoom = roomRepository.findById(roomId).get();
+                existingRoom.setIsEmpty("FULLMEMBER");
+                roomRepository.save(existingRoom);
+                log.info("Room {} updated", roomId);
+            }
+        }catch (ResourceNotFoundException resourceNotFoundException){
+            log.error(resourceNotFoundException.getMessage());
         }
-        return "Room not found";
+        return "Room successfully updated";
     }
 
     @Cacheable(value = "hostel", key = "#hostelId")
@@ -111,11 +121,9 @@ public class HostelService implements I_HostelService {
     @Override
     public List<HostelDTO> getHostels() {
         List<Hostel> hostels = hostelRepository.findAll();
-        return hostels.stream()
+        return hostels.parallelStream()
                 .map(hostelMapper::convertToDTO)
                 .collect(Collectors.toList());
     }
-
-
 
 }
