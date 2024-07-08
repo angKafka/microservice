@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Notification</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <!-- Custom styles -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+
+    .email-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .footer {
+      margin-top: 20px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+<div class="email-container">
+  <h2 class="mb-4">Booking Notification</h2>
+  <p>Hello <span th:text="${firstName}"></span>,</p>
+  <p>We received your room booking request.</p>
+  <p>Please be patient for a response.</p>
+  <p class="footer">Regards,<br>Admin@system.com</p>
+</div>
+</body>
+</html>

@@ -3,6 +3,7 @@ package org.rdutta.hostel.controller;
 import org.rdutta.hostel.dto.HostelDTO;
 import org.rdutta.hostel.http.HostelRequest;
 import org.rdutta.hostel.entity.Hostel;
+import org.rdutta.hostel.http.RoomBedRequest;
 import org.rdutta.hostel.http.RoomRequest;
 import org.rdutta.hostel.service.HostelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,8 @@ public class HostelController {
     }
 
     @PutMapping("/{room_id}")
-    public ResponseEntity<String> updateHostel(@PathVariable("room_id") UUID room_id, @RequestBody RoomRequest request) {
-        String checkEmpty = hostelService.updateRoom(room_id, request);
+    public ResponseEntity<String> chooseBed(@PathVariable("room_id") UUID room_id, @RequestBody RoomBedRequest request) {
+        String checkEmpty = hostelService.chooseBed(room_id, request);
         return ResponseEntity.ok(checkEmpty);
     }
 

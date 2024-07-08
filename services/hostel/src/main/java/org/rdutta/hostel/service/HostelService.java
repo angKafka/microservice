@@ -8,6 +8,7 @@ import org.rdutta.hostel.dto.RoomDTO;
 import org.rdutta.hostel.http.HostelRequest;
 import org.rdutta.hostel.entity.Hostel;
 import org.rdutta.hostel.entity.Room;
+import org.rdutta.hostel.http.RoomBedRequest;
 import org.rdutta.hostel.http.RoomRequest;
 import org.rdutta.hostel.mapper.HostelMapper;
 import org.rdutta.hostel.repository.HostelRepository;
@@ -91,11 +92,13 @@ public class HostelService implements I_HostelService {
 
     @Transactional
     @Override
-    public String updateRoom(UUID roomId, RoomRequest roomRequest) {
+    public String chooseBed(UUID roomId, RoomBedRequest request) {
         try{
             if(roomRepository.existsById(roomId)){
                 Room existingRoom = roomRepository.findById(roomId).get();
-                existingRoom.setIsEmpty("FULLMEMBER");
+                existingRoom.setLeftBed(request.leftBed());
+                existingRoom.setRightBed(request.rightBed());
+                existingRoom.statusChange();
                 roomRepository.save(existingRoom);
                 log.info("Room {} updated", roomId);
             }
@@ -121,7 +124,7 @@ public class HostelService implements I_HostelService {
     @Override
     public List<HostelDTO> getHostels() {
         List<Hostel> hostels = hostelRepository.findAll();
-        return hostels.parallelStream()
+        return hostels.stream().parallel()
                 .map(hostelMapper::convertToDTO)
                 .collect(Collectors.toList());
     }

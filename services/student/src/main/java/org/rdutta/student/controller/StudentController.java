@@ -50,4 +50,16 @@ public class StudentController {
     public ResponseEntity<List<Student>> getActiveStudents(@PathVariable("isActive") boolean isActive) {
         return ResponseEntity.ok(studentService.getActiveStudents(isActive));
     }
+
+    @PostMapping("/book")
+    public ResponseEntity<String> bookHostelRoom(@RequestParam UUID room_id, @RequestParam UUID student_id, @RequestParam String bed) {
+        String bookingMsg = "";
+        if (bed.equals("left")) {
+            bookingMsg = studentService.hostelWorkflow(room_id, student_id, 1, 0);
+        } else {
+            bookingMsg = studentService.hostelWorkflow(room_id, student_id, 0, 1);
+        }
+        return ResponseEntity.ok(bookingMsg);
+    }
+
 }

@@ -3,10 +3,15 @@ package org.rdutta.student.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import org.rdutta.student.client.HostelClient;
+import org.rdutta.student.dto.RoomBedRequest;
 import org.rdutta.student.dto.StudentRequest;
 import org.rdutta.student.dto.StudentResponse;
 import org.rdutta.student.entity.Student;
+import org.rdutta.student.exception.HostelWorkflowException;
 import org.rdutta.student.exception.StudentNotFound;
+import org.rdutta.student.kafka_messages.StudentNotificationRequest;
+import org.rdutta.student.kafka_messages.StudentProducer;
 import org.rdutta.student.mapper.StudentMapper;
 import org.rdutta.student.repository.StudentRepository;
 import org.rdutta.student.utility.StudentSort;
@@ -17,6 +22,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -27,12 +33,16 @@ public class StudentService implements I_StudentService{
     private final StudentRepository repository;
     private final EntityManager em;
     private final StudentMapper mapper;
-
+    private final StudentProducer studentProducer;
+    private final HostelClient hostelClient;
     @Autowired
-    public StudentService(StudentRepository repository, EntityManager em, StudentMapper mapper) {
+    public StudentService(StudentRepository repository, EntityManager em, StudentMapper mapper, StudentProducer studentProducer, HostelClient hostelClient) {
+
         this.repository = repository;
         this.em = em;
         this.mapper = mapper;
+        this.studentProducer = studentProducer;
+        this.hostelClient = hostelClient;
     }
 
 
@@ -41,6 +51,15 @@ public class StudentService implements I_StudentService{
     public UUID saveStudent(StudentRequest request) {
         Student student = mapper.toStudent(request);
         repository.save(student);
+        studentProducer.sendNotification(
+                new StudentNotificationRequest(
+                        request.firstname(),
+                        request.lastname(),
+                        request.email(),
+                        request.admissionAt(),
+                        request.isActive()
+                )
+        );
         return student.getStudentId();
     }
 
@@ -100,4 +119,43 @@ public class StudentService implements I_StudentService{
         List<Student> students = query.getResultList();
         return students;
     }
+
+    @Override
+    @Transactional
+    public String hostelWorkflow(UUID room_id, UUID student_id, int leftBed, int rightBed) {
+        try {
+            // Validate bed options
+            Assert.isTrue(leftBed == 1 || rightBed == 1, "Either leftBed or rightBed must be chosen.");
+
+            // Choose bed for the student
+            var roomBedRequest = new RoomBedRequest(leftBed, rightBed);
+            hostelClient.chooseBed(room_id, roomBedRequest);
+
+            // Retrieve student information
+            Student student = repository.findById(student_id)
+                    .orElseThrow(() -> new StudentNotFound("Student not found"));
+
+            // Send notification
+            sendStudentNotification(student);
+
+            return "Successfully hostel workflow raised";
+        } catch (Exception e) {
+            // Handle specific exceptions or log general errors
+            log.error("Error processing hostel workflow: {}", e.getMessage());
+            throw new HostelWorkflowException("Failed to process hostel workflow", e);
+        }
+    }
+
+    private void sendStudentNotification(Student student) {
+        studentProducer.sendNotification(
+                new StudentNotificationRequest(
+                        student.getFirstName(),
+                        student.getLastName(),
+                        student.getEmail(),
+                        student.getAdmissionDate(),
+                        student.isActive()
+                )
+        );
+    }
 }
+

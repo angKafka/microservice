@@ -15,4 +15,5 @@ public interface I_StudentService {
     Student getStudent(UUID studentId);
     List<StudentResponse> getStudents();
     List<Student> getActiveStudents(boolean isActive);
+    String hostelWorkflow(UUID room_id, UUID student_id, int leftBed, int rightBed);
 }
